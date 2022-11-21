@@ -1,0 +1,163 @@
+Option Explicit
+
+Public Function Correlation_Matrix(Data As Range)
+Dim Data_Array() As Double
+Dim Cols As Integer
+Dim i As Integer, j As Integer, k As Integer, l As Integer
+'Dim Variables As Integer
+
+   Cols = Data.Columns.Count
+ReDim Data_Array(1 To Cols, 1 To Cols)
+   For i = 1 To Cols
+       For j = 1 To Cols
+           Data_Array(i, j) = Application.WorksheetFunction.Pearson(Data.Columns(i), Data.Columns(j))
+       Next j
+   Next i
+Correlation_Matrix = Data_Array
+End Function
+Sub korelacja_auto()
+
+Dim w As Integer
+
+Dim k As Integer
+
+Dim dane As String
+
+dane = MsgBox("Seria danych (bez nazw kolumn) powinna rozpoczynać się od komórki B6")
+
+
+Dim ans As String
+
+Range("l3").Select
+ActiveCell.Offset(0, 1) = InputBox("podaj nazwę zminnej nr 1")
+Range("l4") = Range("m3")
+
+
+ans = MsgBox("Czy są inne zmienne", vbYesNo)
+
+
+Select Case ans
+
+Case Is = vbYes
+
+    GoTo pentla1
+
+Case Is = vbNo
+    Range("m4") = 1
+    GoTo koniecif1
+
+End Select
+
+
+pentla1:
+    ActiveCell.Offset(0, 2) = InputBox("podaj nazwę zminnej nr 2")
+    Range("l5") = Range("n3")
+    ans = MsgBox("Czy są inne zmienne", vbYesNo)
+
+Select Case ans
+
+Case Is = vbYes
+    GoTo pentla2
+
+Case Is = vbNo
+    Range("n4") = 1
+    Range("m5") = 1
+    GoTo koniecif
+    
+End Select
+
+
+pentla2:
+    ActiveCell.Offset(0, 3) = InputBox("podaj nazwę zminnej nr 3")
+    Range("l6") = Range("o3")
+    ans = MsgBox("Czy są inne zmienne", vbYesNo)
+
+Select Case ans
+
+Case Is = vbYes
+    GoTo pentla3
+Case Is = vbNo
+    Range("o4") = 1
+    Range("m6") = 1
+    GoTo koniecif
+        
+End Select
+
+pentla3:
+ActiveCell.Offset(0, 4) = InputBox("podaj nazwę zminnej nr 4")
+Range("l7") = Range("p3")
+ans = MsgBox("Czy są inne zmienne", vbYesNo)
+
+Select Case ans
+
+Case Is = vbYes
+    GoTo pentla4
+
+Case Is = vbNo
+    Range("p4") = 1
+    Range("m7") = 1
+    GoTo koniecif
+
+End Select
+
+pentla4:
+ActiveCell.Offset(0, 5) = InputBox("podaj nazwę zminnej nr 5")
+Range("l8") = Range("q3")
+ans = MsgBox("Czy są inne zmienne", vbOKOnly)
+
+If ans = vbOK Then
+    Range("q4") = 1
+    Range("m8") = 1
+    GoTo koniecif
+
+
+koniecif:
+Range("m4").Select
+Range(Selection, Selection.End(xlToRight)).Select
+Range(Selection, Selection.End(xlDown)).Select
+Selection.FormulaArray = "=Correlation_Matrix(R[2]C[-11]:R[1000]C[-10])"
+koniecif1:
+Range("a1").Select
+End If
+
+    Range("L3").Select
+    Range(Selection, Selection.End(xlToRight).End(xlToRight).End(xlDown)).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .Weight = xlThin
+    End With
+    Range("L3").Select
+    ActiveCell = "Tabela korelacji"
+        With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+    End With
+    Columns("L:L").EntireColumn.AutoFit
+    
+Dim ans2 As String
+ans2 = MsgBox("Koniec analizy", vbOKOnly)
+End Sub
+
